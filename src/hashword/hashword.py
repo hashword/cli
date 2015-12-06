@@ -14,7 +14,7 @@ def get_user_services():
         with open(os.path.join(data_dir, 'keys.txt'), 'r') as key_file:
             keys = key_file.read().split('\n')
         return keys
-    except FileNotFoundError:
+    except IOError:
         return []
 
 

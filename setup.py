@@ -20,6 +20,7 @@ setup(
     name='hashword',
     version=get_version(),
     packages=find_packages(where='src'),
+    package_dir = {'':'src'},
     install_requires=[
         'appdirs>1',
         'click>6',
