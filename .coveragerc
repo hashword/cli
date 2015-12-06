@@ -1,0 +1,12 @@
+[run]
+branch = True
+source = src
+
+[paths]
+source =
+   src/attr
+   .tox/*/lib/python*/site-packages/hashword
+   .tox/pypy*/site-packages/hashword
+
+[report]
+show_missing = True
