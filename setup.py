@@ -19,7 +19,7 @@ def get_version():
 setup(
     name='hashword',
     version=get_version(),
-    packages=find_packages(where="src"),
+    packages=find_packages(where='src'),
     install_requires=[
         'appdirs>1',
         'click>6',
