@@ -1,11 +1,13 @@
 import os
 import hashlib
+import pkg_resources
 from appdirs import user_data_dir
 import click
 import pyperclip
 
 
-VERSION = '1.0.0'
+def get_version():
+    return pkg_resources.get_distribution('hashword').parsed_version.public
 
 
 def get_user_services():
@@ -71,7 +73,7 @@ def list_services_option(*param_decls, **attrs):
 @click.argument('service')
 @click.option('--remove', '-r', default=False, is_flag=True)
 @list_services_option()
-@click.version_option(message=VERSION)
+@click.version_option(message=get_version())
 def cli(service, remove):
     if remove:
         remove_user_service(service)
