@@ -14,8 +14,9 @@ def get_user_services():
     data_dir = user_data_dir('hashword')
     try:
         with open(os.path.join(data_dir, 'keys.txt'), 'r') as key_file:
-            keys = key_file.read().split('\n')
-        return keys
+            keys = key_file.read()
+        keys = keys.split(',')
+        return [service.strip() for service in keys]
     except IOError:
         return []
 
@@ -24,11 +25,11 @@ def save_user_services(services):
     data_dir = user_data_dir('hashword')
     try:
         os.makedirs(data_dir)
-    except FileExistsError:
+    except OSError:
         pass
+    services.sort()
     with open(os.path.join(data_dir, 'keys.txt'), 'w') as key_file:
-        for service in services:
-            key_file.write(service + '\n')
+        key_file.write(','.join(services) + '\n')
 
 
 def add_user_service(service):
@@ -71,13 +72,18 @@ def list_services_option(*param_decls, **attrs):
 
 @click.command()
 @click.argument('service')
-@click.option('--remove', '-r', default=False, is_flag=True)
+@click.option('--remove', '-r', default=False, is_flag=True,
+                help='Remove a Service from the list.')
 @list_services_option()
 @click.version_option(message=get_version())
 def cli(service, remove):
     if remove:
-        remove_user_service(service)
-        click.echo('{} removed.'.format(service))
+        success = remove_user_service(service)
+        if success is True:
+            click.echo('{} removed.'.format(service))
+        else:
+            keyfile = os.path.join(user_data_dir('hashword'), 'keys.txt')
+            click.echo('{} not found in {}.'.format(service, keyfile))
         return
     user_services = get_user_services()
     if service not in user_services:
